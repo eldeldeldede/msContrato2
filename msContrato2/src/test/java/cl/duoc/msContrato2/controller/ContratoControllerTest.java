@@ -2,12 +2,15 @@ package cl.duoc.msContrato2.controller;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
+import static org.mockito.Mockito.doNothing;
+import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 
 import java.util.List;
 
@@ -163,6 +166,24 @@ public class ContratoControllerTest {
         when(contratoService.obtenerDetallesContrato(99)).thenThrow(new RuntimeException());
 
         mock.perform(get("/api/v1/contratos/detalle/99"))
+            .andExpect(status().isNotFound());
+    }
+
+    // ---------- eliminarContrato (DELETE) ----------
+
+    @Test
+    public void eliminarContrato_retorna204() throws Exception {
+        doNothing().when(contratoService).eliminarContrato(1);
+
+        mock.perform(delete("/api/v1/contratos/1"))
+            .andExpect(status().isNoContent());
+    }
+
+    @Test
+    public void eliminarContrato_retorna404() throws Exception {
+        doThrow(new RuntimeException("Contrato no encontrado")).when(contratoService).eliminarContrato(99);
+
+        mock.perform(delete("/api/v1/contratos/99"))
             .andExpect(status().isNotFound());
     }
 }
