@@ -8,7 +8,7 @@ import cl.duoc.msContrato2.dto.SucursalDTO;
 
 
 
-@FeignClient(name = "Sucursal", url = "https://localhost:8087")
+@FeignClient(name = "Sucursal")
 public interface SucursalClient {
 
     @GetMapping("/api/v1/sucursal/dto/{id}")
